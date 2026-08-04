@@ -23,3 +23,7 @@ def get_db():
 @router.post("/", response_model=JobResponse, status_code=201)
 def create_job(job: JobCreate, db: Session = Depends(get_db)):
     return JobService.create_job(db, job)
+
+@router.get("/", response_model=list[JobResponse])
+def get_jobs(db: Session = Depends(get_db)):
+    return JobService.get_jobs(db)

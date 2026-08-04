@@ -18,3 +18,7 @@ class JobRepository:
         db.refresh(db_job)
 
         return db_job
+
+    @staticmethod
+    def get_all(db: Session) -> list[Job]:
+        return db.query(Job).all()
