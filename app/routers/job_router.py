@@ -39,3 +39,7 @@ def update_job(
     db: Session = Depends(get_db)
 ):
     return JobService.update_job(db, job_id, job_data)
+
+@router.delete("/{job_id}", status_code=204)
+def delete_job(job_id: int, db: Session = Depends(get_db)):
+    JobService.delete_job(db, job_id)

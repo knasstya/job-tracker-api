@@ -42,3 +42,8 @@ class JobRepository:
         db.refresh(db_job)
 
         return db_job
+
+    @staticmethod
+    def delete(db: Session, db_job: Job):
+        db.delete(db_job)
+        db.commit()

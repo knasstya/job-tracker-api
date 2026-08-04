@@ -38,3 +38,15 @@ class JobService:
             )
 
         return JobRepository.update(db, job, job_data)
+
+    @staticmethod
+    def delete_job(db: Session, job_id: int):
+        job = JobRepository.get_by_id(db, job_id)
+
+        if not job:
+            raise HTTPException(
+                status_code=404,
+                detail="Job not found"
+            )
+
+        JobRepository.delete(db, job)
