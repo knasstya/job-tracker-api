@@ -22,3 +22,7 @@ class JobRepository:
     @staticmethod
     def get_all(db: Session) -> list[Job]:
         return db.query(Job).all()
+
+    @staticmethod
+    def get_by_id(db: Session, job_id: int) -> Job | None:
+        return db.query(Job).filter(Job.id == job_id).first()

@@ -1,5 +1,6 @@
-from sqlalchemy.orm import Session
 
+from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from app.repositories.job_repository import JobRepository
 from app.schemas.job import JobCreate
 
@@ -13,3 +14,15 @@ class JobService:
     @staticmethod
     def get_jobs(db: Session):
         return JobRepository.get_all(db)
+
+    @staticmethod
+    def get_job(db: Session, job_id: int):
+        job = JobRepository.get_by_id(db, job_id)
+
+        if not job:
+            raise HTTPException(
+                status_code=404,
+                detail="Job not found"
+            )
+
+        return job
