@@ -7,6 +7,10 @@ class JobCreate(BaseModel):
     company: str
     position: str
 
+class JobUpdate(BaseModel):
+    company: str | None = None
+    position: str | None = None
+    status: str | None = None
 
 class JobResponse(BaseModel):
     id: int

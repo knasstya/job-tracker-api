@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
 
 from app.core.database import SessionLocal
-from app.schemas.job import JobCreate, JobResponse
+from app.schemas.job import JobCreate, JobResponse, JobUpdate
 from app.services.job_service import JobService
 
 
@@ -31,3 +31,11 @@ def get_jobs(db: Session = Depends(get_db)):
 @router.get("/{job_id}", response_model=JobResponse)
 def get_job(job_id: int, db: Session = Depends(get_db)):
     return JobService.get_job(db, job_id)
+
+@router.patch("/{job_id}", response_model=JobResponse)
+def update_job(
+    job_id: int,
+    job_data: JobUpdate,
+    db: Session = Depends(get_db)
+):
+    return JobService.update_job(db, job_id, job_data)

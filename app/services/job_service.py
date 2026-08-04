@@ -2,7 +2,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.repositories.job_repository import JobRepository
-from app.schemas.job import JobCreate
+from app.schemas.job import JobCreate, JobUpdate
 
 
 class JobService:
@@ -26,3 +26,15 @@ class JobService:
             )
 
         return job
+    
+    @staticmethod
+    def update_job(db: Session, job_id: int, job_data: JobUpdate):
+        job = JobRepository.get_by_id(db, job_id)
+
+        if not job:
+            raise HTTPException(
+                status_code=404,
+                detail="Job not found"
+            )
+
+        return JobRepository.update(db, job, job_data)
