@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 
-from app.core.database import SessionLocal
+from app.core.database import get_db
 from app.schemas.job import JobCreate, JobResponse, JobUpdate
 from app.services.job_service import JobService
 
@@ -10,14 +10,6 @@ router = APIRouter(
     prefix="/jobs",
     tags=["Jobs"]
 )
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/", response_model=JobResponse, status_code=201)
@@ -41,5 +33,9 @@ def update_job(
     return JobService.update_job(db, job_id, job_data)
 
 @router.delete("/{job_id}", status_code=204)
-def delete_job(job_id: int, db: Session = Depends(get_db)):
+def delete_job(
+    job_id: int,
+    db: Session = Depends(get_db)
+):
     JobService.delete_job(db, job_id)
+    return Response(status_code=204)
