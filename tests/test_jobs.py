@@ -1,12 +1,4 @@
-from fastapi.testclient import TestClient
-
-from app.main import app
-
-
-client = TestClient(app)
-
-
-def test_root():
+def test_root(client):
     response = client.get("/")
 
     assert response.status_code == 200
@@ -15,7 +7,7 @@ def test_root():
     }
 
 
-def test_create_job(sample_job):
+def test_create_job(client, sample_job):
     response = client.post(
         "/jobs/",
         json=sample_job
@@ -29,7 +21,13 @@ def test_create_job(sample_job):
     assert data["position"] == "Backend Developer"
     assert data["status"] == "Applied"
 
-def test_get_jobs():
+
+def test_get_jobs(client, sample_job):
+    client.post(
+        "/jobs/",
+        json=sample_job
+    )
+
     response = client.get("/jobs/")
 
     assert response.status_code == 200
@@ -37,8 +35,10 @@ def test_get_jobs():
     data = response.json()
 
     assert isinstance(data, list)
+    assert len(data) > 0
 
-def test_get_job_by_id(sample_job):
+
+def test_get_job_by_id(client, sample_job):
     create_response = client.post(
         "/jobs/",
         json=sample_job
@@ -57,7 +57,8 @@ def test_get_job_by_id(sample_job):
     assert data["id"] == job_id
     assert data["company"] == "Google"
 
-def test_update_job(sample_job):
+
+def test_update_job(client, sample_job):
     create_response = client.post(
         "/jobs/",
         json=sample_job
@@ -79,7 +80,8 @@ def test_update_job(sample_job):
     assert data["id"] == job_id
     assert data["status"] == "Interview"
 
-def test_delete_job(sample_job):
+
+def test_delete_job(client, sample_job):
     create_response = client.post(
         "/jobs/",
         json=sample_job
