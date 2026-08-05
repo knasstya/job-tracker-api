@@ -1,16 +1,18 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class JobCreate(BaseModel):
     company: str
     position: str
 
+
 class JobUpdate(BaseModel):
     company: str | None = None
     position: str | None = None
     status: str | None = None
+
 
 class JobResponse(BaseModel):
     id: int
@@ -19,5 +21,6 @@ class JobResponse(BaseModel):
     status: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True
+    )
