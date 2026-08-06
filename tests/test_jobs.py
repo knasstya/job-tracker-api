@@ -169,3 +169,15 @@ def test_get_jobs_by_status(client):
 
     for job in data:
         assert job["status"] == "Interview"
+
+def test_create_job_invalid_status(client):
+    response = client.post(
+        "/jobs/",
+        json={
+            "company": "Google",
+            "position": "Backend Developer",
+            "status": "banana"
+        }
+    )
+
+    assert response.status_code == 422

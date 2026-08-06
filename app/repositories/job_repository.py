@@ -10,7 +10,8 @@ class JobRepository:
     def create(db: Session, job: JobCreate) -> Job:
         db_job = Job(
             company=job.company,
-            position=job.position
+            position=job.position,
+            status=job.status
         )
 
         db.add(db_job)
