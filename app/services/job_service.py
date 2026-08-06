@@ -12,8 +12,11 @@ class JobService:
         return JobRepository.create(db, job)
 
     @staticmethod
-    def get_jobs(db: Session):
-        return JobRepository.get_all(db)
+    def get_jobs(
+        db: Session,
+        status: str | None = None
+    ):
+        return JobRepository.get_all(db, status)
 
     @staticmethod
     def get_job(db: Session, job_id: int):
