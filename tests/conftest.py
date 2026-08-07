@@ -26,9 +26,6 @@ TestingSessionLocal = sessionmaker(
 )
 
 
-Base.metadata.create_all(bind=engine)
-
-
 def override_get_db():
     db = TestingSessionLocal()
 
@@ -43,7 +40,13 @@ app.dependency_overrides[get_db] = override_get_db
 
 @pytest.fixture
 def client():
-    return TestClient(app)
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+
+    with TestClient(app) as client:
+        yield client
+
+    Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture
 def sample_job():

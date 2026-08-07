@@ -19,9 +19,16 @@ def create_job(job: JobCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=list[JobResponse])
 def get_jobs(
     status: str | None = None,
+    limit: int = 10,
+    offset: int = 0,
     db: Session = Depends(get_db)
 ):
-    return JobService.get_jobs(db, status)
+    return JobService.get_jobs(
+        db,
+        status,
+        limit,
+        offset
+    )
 
 @router.get("/{job_id}", response_model=JobResponse)
 def get_job(job_id: int, db: Session = Depends(get_db)):

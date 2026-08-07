@@ -181,3 +181,81 @@ def test_create_job_invalid_status(client):
     )
 
     assert response.status_code == 422
+
+def test_get_jobs_with_limit(client, sample_job):
+    client.post(
+        "/jobs/",
+        json=sample_job
+    )
+
+    client.post(
+        "/jobs/",
+        json={
+            "company": "Microsoft",
+            "position": "Backend Developer"
+        }
+    )
+
+    response = client.get("/jobs/?limit=1")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert len(data) == 1
+
+def test_get_jobs_by_status(client, sample_job):
+    client.post(
+        "/jobs/",
+        json=sample_job
+    )
+
+    client.post(
+        "/jobs/",
+        json={
+            "company": "Microsoft",
+            "position": "Backend Developer",
+            "status": "Interview"
+        }
+    )
+
+    response = client.get(
+        "/jobs/?status=Interview"
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert len(data) > 0
+
+    for job in data:
+        assert job["status"] == "Interview"
+
+def test_get_jobs_with_offset(client):
+    client.post(
+        "/jobs/",
+        json={
+            "company": "Google",
+            "position": "Developer"
+        }
+    )
+
+    client.post(
+        "/jobs/",
+        json={
+            "company": "Microsoft",
+            "position": "Developer"
+        }
+    )
+
+    response = client.get(
+        "/jobs/?limit=1&offset=1"
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert len(data) == 1
+    assert data[0]["company"] == "Microsoft"

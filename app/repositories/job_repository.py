@@ -23,15 +23,21 @@ class JobRepository:
     @staticmethod
     def get_all(
         db: Session,
-        status: str | None = None
+        status: str | None = None,
+        limit: int = 10,
+        offset: int = 0
     ) -> list[Job]:
-
         query = db.query(Job)
 
         if status:
             query = query.filter(Job.status == status)
 
-        return query.all()
+        return (
+            query
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
 
     @staticmethod
     def get_by_id(db: Session, job_id: int) -> Job | None:

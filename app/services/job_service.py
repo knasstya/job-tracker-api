@@ -14,9 +14,16 @@ class JobService:
     @staticmethod
     def get_jobs(
         db: Session,
-        status: str | None = None
+        status: str | None = None,
+        limit: int = 10,
+        offset: int = 0
     ):
-        return JobRepository.get_all(db, status)
+        return JobRepository.get_all(
+            db,
+            status,
+            limit,
+            offset
+        )
 
     @staticmethod
     def get_job(db: Session, job_id: int):
