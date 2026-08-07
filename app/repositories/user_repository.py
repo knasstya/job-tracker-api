@@ -38,3 +38,4 @@ class UserRepository:
             .filter(User.email == email)
             .first()
         )
+
