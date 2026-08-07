@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 
-from app.routers import job_router
+from app.routers import job_router, auth_router
 
 
 app = FastAPI()
 
 
 app.include_router(job_router.router)
+app.include_router(auth_router.router)
 
 
 @app.get("/")
