@@ -19,7 +19,7 @@ class JobResponse(BaseModel):
     id: int
     company: str
     position: str
-    status: str
+    status: JobStatus
     created_at: datetime
 
     model_config = ConfigDict(
