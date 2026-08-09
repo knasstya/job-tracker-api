@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from datetime import datetime, timezone
 
 from app.core.database import Base
-
+from app.models.job_status import JobStatus
 
 class Job(Base):
     __tablename__ = "jobs"
@@ -15,16 +15,18 @@ class Job(Base):
 
     status = Column(
         String,
-        default="Applied"
+        default=JobStatus.APPLIED.value,
+        nullable=False
     )
 
     created_at = Column(
-    DateTime,
-    default=lambda: datetime.now(timezone.utc)
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False
     )
 
     user_id = Column(
-    Integer,
-    ForeignKey("users.id"),
-    nullable=False
+        Integer,
+        ForeignKey("users.id"),
+        nullable=False
     )

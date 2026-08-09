@@ -34,6 +34,14 @@ def override_get_db():
     finally:
         db.close()
 
+@pytest.fixture
+def db():
+    db = TestingSessionLocal()
+
+    try:
+        yield db
+    finally:
+        db.close()
 
 app.dependency_overrides[get_db] = override_get_db
 
@@ -48,9 +56,90 @@ def client():
 
     Base.metadata.drop_all(bind=engine)
 
+
 @pytest.fixture
 def sample_job():
     return {
         "company": "Google",
         "position": "Backend Developer"
     }
+
+
+@pytest.fixture
+def authenticated_client(client):
+    response = client.post(
+        "/auth/register",
+        json={
+            "email": "test@example.com",
+            "password": "secret123"
+        }
+    )
+
+    assert response.status_code == 201
+
+    response = client.post(
+        "/auth/login",
+        data={
+            "username": "test@example.com",
+            "password": "secret123"
+        }
+    )
+
+    assert response.status_code == 200
+
+    token = response.json()["access_token"]
+
+    client.headers.update({
+        "Authorization": f"Bearer {token}"
+    })
+
+    return client
+
+@pytest.fixture
+def client_factory(client):
+    clients = []
+
+    def create_client():
+        test_client = TestClient(app)
+        clients.append(test_client)
+        return test_client
+
+    yield create_client
+
+    for test_client in clients:
+        test_client.close()
+
+@pytest.fixture
+def create_authenticated_client(client_factory):
+    def create(email):
+        client = client_factory()
+
+        response = client.post(
+            "/auth/register",
+            json={
+                "email": email,
+                "password": "secret123"
+            }
+        )
+
+        assert response.status_code == 201
+
+        response = client.post(
+            "/auth/login",
+            data={
+                "username": email,
+                "password": "secret123"
+            }
+        )
+
+        assert response.status_code == 200
+
+        token = response.json()["access_token"]
+
+        client.headers.update({
+            "Authorization": f"Bearer {token}"
+        })
+
+        return client
+
+    return create
