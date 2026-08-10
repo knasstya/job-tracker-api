@@ -1,6 +1,6 @@
 # Job Tracker API
 
-A REST API for managing job applications built with FastAPI and PostgreSQL, featuring JWT authentication, database migrations, automated tests, and Docker support.
+A REST API for managing job applications built with FastAPI and PostgreSQL, featuring JWT authentication, database migrations, automated tests and Docker support.
 
 ## Features
 
@@ -11,7 +11,7 @@ A REST API for managing job applications built with FastAPI and PostgreSQL, feat
 * Filter by application status
 * Pagination and sorting
 * PostgreSQL database with Alembic migrations
-* Pytest test suite with 100% core coverage
+* Pytest test suite with 43 passing tests
 * Docker and Docker Compose setup
 * Swagger / OpenAPI interactive documentation
 
@@ -43,3 +43,26 @@ tests/            # Automated tests
 Dockerfile
 compose.yaml
 requirements.txt
+```
+
+## Live Demo
+
+The API is deployed on Render.
+
+* API: https://job-tracker-api-8ca3.onrender.com
+* Swagger UI: https://job-tracker-api-8ca3.onrender.com/docs
+* Health check: https://job-tracker-api-8ca3.onrender.com/health
+
+## Deployment
+
+The application is containerized with Docker and deployed on Render.
+
+The production setup uses:
+
+* FastAPI running in a Docker container
+* PostgreSQL hosted on Render
+* Alembic for database migrations
+* Environment variables for production configuration
+* JWT authentication for protected endpoints
+
+The Docker setup can also be used to run the application locally with PostgreSQL using Docker Compose.
